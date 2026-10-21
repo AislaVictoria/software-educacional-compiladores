@@ -4,21 +4,21 @@
 
 Este repositório apresenta a primeira etapa do meu software educacional: um ambiente inicial para estudar como uma linguagem de programação é analisada. Nesta fase, o objetivo principal não é entregar um analisador completo, e sim construir uma base organizada, reproduzível e preparada para receber as próximas funcionalidades.
 
-## 1. Escolha da linguagem e do subconjunto inicial
+## 1\. Escolha da linguagem e do subconjunto inicial
 
 Para o projeto, escolhi a linguagem **Python** como linguagem de programação a ser analisada nas próximas etapas. A escolha foi feita porque Python tem uma sintaxe relativamente simples e bastante legível, o que facilita a explicação dos conceitos de análise léxica, sintática e semântica. Além disso, é uma linguagem muito utilizada tanto no ensino quanto no mercado, tornando o projeto mais próximo de situações reais de aprendizagem.
 
 O subconjunto inicial planejado será pequeno e progressivo. Primeiro, serão trabalhados:
 
-- declaração e atribuição de variáveis;
-- tipos básicos, como números, textos e valores booleanos;
-- operadores aritméticos e relacionais;
-- estruturas condicionais (`if` e `else`);
-- comandos simples de saída, como `print()`.
+* declaração e atribuição de variáveis;
+* tipos básicos, como números, textos e valores booleanos;
+* operadores aritméticos e relacionais;
+* estruturas condicionais (`if` e `else`);
+* comandos simples de saída, como `print()`.
 
 Decidi começar dessa forma porque tentar analisar toda a linguagem Python logo no início deixaria o projeto muito amplo e difícil de validar. Com um subconjunto bem delimitado, será possível implementar cada etapa com mais cuidado e explicar os resultados de maneira compreensível para quem está aprendendo.
 
-## 2. Estrutura do repositório
+## 2\. Estrutura do repositório
 
 ```text
 trabalho-1/
@@ -38,25 +38,25 @@ trabalho-1/
 
 O **frontend** é responsável pela interface que o usuário acessa. O **backend** disponibiliza as rotas da aplicação e, nesta primeira versão, responde à mensagem de teste e a uma rota de saúde. A separação entre as duas partes foi feita desde o começo para deixar o projeto mais organizado e facilitar sua evolução.
 
-## 3. Tecnologias utilizadas
+## 3\. Tecnologias utilizadas
 
-- Python 3.12;
-- Flask, para a criação do backend;
-- HTML, CSS e JavaScript, para a interface;
-- Nginx, para servir o frontend e encaminhar as chamadas da API;
-- Docker e Docker Compose, para padronizar o ambiente.
+* Python 3.12;
+* Flask, para a criação do backend;
+* HTML, CSS e JavaScript, para a interface;
+* Nginx, para servir o frontend e encaminhar as chamadas da API;
+* Docker e Docker Compose, para padronizar o ambiente.
 
 Não incluí banco de dados nesta etapa porque ainda não existe uma funcionalidade que precise armazenar informações. Essa decisão evita complexidade desnecessária e mantém o foco na estrutura inicial do sistema.
 
-## 4. Como executar o projeto
+## 4\. Como executar o projeto
 
 ### Pré-requisitos
 
 É necessário ter instalado:
 
-- Docker 24 ou superior;
-- Docker Compose v2 ou superior, normalmente disponível pelo comando `docker compose`;
-- Git, caso o repositório seja clonado do GitHub.
+* Docker 24 ou superior;
+* Docker Compose v2 ou superior, normalmente disponível pelo comando `docker compose`;
+* Git, caso o repositório seja clonado do GitHub.
 
 ### Inicialização
 
@@ -72,7 +72,7 @@ Depois, abra no navegador:
 http://localhost:8080
 ```
 
-A página deverá carregar e exibir a mensagem **“Hello, World!”**. Essa mensagem é retornada pelo backend através da rota `/api/hello` e apresentada pelo frontend, demonstrando que os dois serviços estão se comunicando.
+Ao acessar http://localhost:8080, a aplicação apresenta a interface do Laboratório de Linguagens, com editor de código Python, exemplos e botão para solicitar análise. A comunicação entre frontend e backend pode ser verificada pela rota /api/hello, que retorna a mensagem “Hello, World!”, e pela rota /api/analyze, responsável por receber e validar o código-fonte enviado.
 
 ### Encerramento
 
@@ -88,12 +88,12 @@ Se for necessário reconstruir as imagens depois de alguma alteração, use nova
 docker compose up --build
 ```
 
-## 5. Rotas disponíveis no backend
+## 5\. Rotas disponíveis no backend
 
-- `GET /api/hello`: retorna a mensagem de teste da aplicação;
-- `GET /api/health`: informa se o backend está funcionando corretamente.
+* `GET /api/hello`: retorna a mensagem de teste da aplicação;
+* `GET /api/health`: informa se o backend está funcionando corretamente.
 
-## 6. Validação da instalação limpa
+## 6\. Validação da instalação limpa
 
 A validação deve ser feita em uma máquina ou ambiente que não tenha dependências específicas deste projeto instaladas. O procedimento é:
 
@@ -106,13 +106,14 @@ A validação deve ser feita em uma máquina ou ambiente que não tenha dependê
 
 A configuração foi preparada para que não seja necessário instalar Flask, Nginx ou outras dependências diretamente na máquina do usuário. Essas dependências são instaladas e executadas dentro dos contêineres, o que torna o processo mais previsível.
 
-## 7. Repositório e acompanhamento
+## 7\. Repositório e acompanhamento
 
 O projeto deve ser publicado em um repositório do GitHub e compartilhado com o professor **rocha3runo**, conforme a orientação da disciplina. Depois da publicação, o link do repositório deve ser informado no local indicado pelo professor.
 
 ## Considerações finais
 
 Esta primeira etapa representa a fundação do projeto. Mesmo que a aplicação ainda seja simples, ela já possui uma divisão clara entre frontend e backend, uma configuração reproduzível com Docker e uma documentação que explica como começar e como encerrar a execução. A partir dessa base, as próximas etapas poderão se concentrar na implementação do analisador educacional, sem que seja necessário reorganizar toda a estrutura do sistema.
+
 
 
 # Trabalho 2 — Interface Web e entrada de código-fonte
@@ -139,7 +140,7 @@ O frontend envia o código para o backend por meio de uma requisição HTTP `POS
 
 ```json
 {
-  "codigo": "numero = 10\\nprint(numero)"
+  "codigo": "numero = 10\\\\nprint(numero)"
 }
 ```
 
@@ -168,8 +169,8 @@ As mensagens foram separadas por situação: aviso para código vazio ou inváli
 Os testes podem ser executados na raiz do projeto com:
 
 ```bash
-python3 -m unittest discover -s backend -p "test_*.py"
-node --test frontend/test_app_core.js
+python3 -m unittest discover -s backend -p "test\_\*.py"
+node --test frontend/test\_app\_core.js
 ```
 
 O registro detalhado dos testes está em [`docs-testes-trabalho-2.md`](docs-testes-trabalho-2.md). Os testes cobrem o novo endpoint, os casos inválidos, os caracteres especiais, os exemplos e a regressão das rotas que já existiam na primeira etapa.
