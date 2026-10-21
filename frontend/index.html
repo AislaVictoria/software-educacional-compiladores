@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratório de Linguagens | Python</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">&lt;/&gt;</div>
+    <div>
+      <p class="eyebrow">Software educacional</p>
+      <h1>Laboratório de Linguagens</h1>
+    </div>
+    <span class="language-badge">Python · etapa 2</span>
+  </header>
+
+  <main class="layout">
+    <section class="intro-panel">
+      <p class="eyebrow accent">Sua primeira experiência com o analisador</p>
+      <h2>Escreva, experimente e prepare seu código.</h2>
+      <p>Insira um pequeno programa em Python ou comece por um dos exemplos. Nesta etapa, o sistema confirma o recebimento do código e prepara o caminho para as análises léxica, sintática e semântica.</p>
+      <div class="scope-card">
+        <strong>O que já faz parte desta versão?</strong>
+        <ul>
+          <li>Variáveis e tipos básicos</li>
+          <li>Operadores aritméticos</li>
+          <li>Estruturas condicionais</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="workspace" aria-labelledby="editor-title">
+      <div class="workspace-heading">
+        <div>
+          <p class="eyebrow">Entrada de código</p>
+          <h2 id="editor-title">Seu programa Python</h2>
+        </div>
+        <label class="example-picker" for="example-select">
+          <span>Carregar exemplo</span>
+          <select id="example-select">
+            <option value="">Escolha uma opção</option>
+            <option value="variaveis">Variáveis e tipos básicos</option>
+            <option value="operadores">Operações aritméticas</option>
+            <option value="condicional">Estrutura condicional</option>
+          </select>
+        </label>
+      </div>
+
+      <textarea id="code-input" spellcheck="false" aria-label="Código-fonte em Python" placeholder="# Escreva seu código aqui...">nome = "Olá, estudante!"
+print(nome)</textarea>
+      <div class="editor-footer">
+        <span id="code-info">2 linhas</span>
+        <button id="analyze-button" type="button">Solicitar análise <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div id="result-area" class="result-area" role="status" aria-live="polite">
+        <div class="result-icon" aria-hidden="true">i</div>
+        <div>
+          <strong>A resposta aparecerá aqui</strong>
+          <p>Digite ou selecione um código e clique em “Solicitar análise”.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Laboratório de Linguagens · Construído para aprender como os compiladores funcionam.</footer>
+  <script src="app-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #182338;
+  background: #f5f7fb;
+  --navy: #182338;
+  --blue: #4568d8;
+  --muted: #66738a;
+  --line: #dfe5ef;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 90% 0%, #e8edff 0, transparent 35%), #f5f7fb; }
+.topbar { min-height: 82px; padding: 18px clamp(24px, 6vw, 88px); display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,.92); border-bottom: 1px solid var(--line); }
+.brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: var(--navy); color: #aebdff; font-weight: 800; }
+h1, h2, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: 1.08rem; }
+h2 { font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.15; margin-bottom: 16px; }
+.eyebrow { margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.accent { color: var(--blue); }
+.language-badge { margin-left: auto; padding: 8px 12px; border: 1px solid #cbd5ff; border-radius: 999px; color: #3e59ba; background: #f0f3ff; font-size: .82rem; font-weight: 700; }
+.layout { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: clamp(42px, 7vw, 90px) 0; display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 7vw, 96px); align-items: center; }
+.intro-panel > p:not(.eyebrow) { max-width: 460px; color: var(--muted); line-height: 1.75; font-size: 1.02rem; }
+.scope-card { margin-top: 30px; padding: 20px 22px; border-left: 3px solid #8296e9; border-radius: 0 14px 14px 0; background: #fff; box-shadow: 0 10px 30px rgba(37,53,95,.05); }
+.scope-card strong { font-size: .9rem; }
+.scope-card ul { margin: 12px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.8; font-size: .9rem; }
+.workspace { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: #fff; box-shadow: 0 24px 60px rgba(31,53,100,.1); }
+.workspace-heading { padding: 22px 24px 18px; display: flex; justify-content: space-between; gap: 20px; align-items: end; border-bottom: 1px solid var(--line); }
+.workspace-heading h2 { margin: 0; font-size: 1.35rem; }
+.example-picker { display: grid; gap: 6px; color: var(--muted); font-size: .72rem; font-weight: 700; }
+select { min-width: 190px; padding: 9px 10px; border: 1px solid #cfd7e6; border-radius: 8px; color: var(--navy); background: white; }
+textarea { display: block; width: 100%; min-height: 285px; padding: 24px; resize: vertical; border: 0; outline: 0; color: #dce5ff; background: #202b43; font: 500 .96rem/1.7 "SFMono-Regular", Consolas, monospace; }
+textarea::placeholder { color: #8e9bb8; }
+.editor-footer { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+button { padding: 11px 16px; border: 0; border-radius: 9px; color: white; background: var(--blue); cursor: pointer; font-weight: 750; transition: .2s ease; }
+button:hover { background: #3453ba; transform: translateY(-1px); }
+button:disabled { opacity: .7; cursor: wait; transform: none; }
+.result-area { min-height: 95px; padding: 18px 20px; display: flex; gap: 13px; align-items: flex-start; background: #fbfcff; }
+.result-area strong { font-size: .92rem; }
+.result-area p { margin: 5px 0 0; color: var(--muted); font-size: .84rem; line-height: 1.5; }
+.result-icon { width: 25px; height: 25px; flex: 0 0 25px; display: grid; place-items: center; border-radius: 50%; color: #4963c6; background: #e5eaff; font-weight: 800; }
+.result-area.success { background: #effaf4; }.result-area.success .result-icon { color: #137546; background: #c9f0d9; }
+.result-area.warning { background: #fff9ed; }.result-area.warning .result-icon { color: #9b6410; background: #ffebbd; }
+.result-area.error { background: #fff1f1; }.result-area.error .result-icon { color: #ad3030; background: #ffd7d7; }
+footer { padding: 20px; text-align: center; color: #8994a8; font-size: .78rem; }
+@media (max-width: 800px) { .layout { grid-template-columns: 1fr; padding-top: 42px; } .workspace-heading { align-items: stretch; flex-direction: column; } select { width: 100%; } }
