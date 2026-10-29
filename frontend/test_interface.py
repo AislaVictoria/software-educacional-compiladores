@@ -16,7 +16,7 @@ class InterfaceContractTestCase(unittest.TestCase):
         self.assertIn('Software educacional', self.html)
 
     def test_tela_possui_entrada_selecao_botao_e_resultado(self):
-        for elemento in ['code-input', 'example-select', 'analyze-button', 'result-area']:
+        for elemento in ['code-input', 'example-select', 'analyze-button', 'result-area', 'token-panel', 'token-table-body', 'lexical-errors']:
             self.assertIn(f'id="{elemento}"', self.html)
 
     def test_interface_envia_json_para_endpoint_de_analise(self):
@@ -27,6 +27,11 @@ class InterfaceContractTestCase(unittest.TestCase):
     def test_interface_trata_falha_de_comunicacao(self):
         self.assertIn('Falha de comunicação', self.script)
         self.assertIn('Não foi possível comunicar com o servidor', self.script)
+
+    def test_interface_renderiza_tokens_e_erros_sem_inserir_html_do_usuario(self):
+        self.assertIn('mostrarAnalise', self.script)
+        self.assertIn('tokenTableBody.appendChild', self.script)
+        self.assertIn('item.textContent = erro.mensagem', self.script)
 
 
 if __name__ == '__main__':

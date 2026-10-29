@@ -174,3 +174,109 @@ node --test frontend/test\_app\_core.js
 ```
 
 O registro detalhado dos testes está em [`docs-testes-trabalho-2.md`](docs-testes-trabalho-2.md). Os testes cobrem o novo endpoint, os casos inválidos, os caracteres especiais, os exemplos e a regressão das rotas que já existiam na primeira etapa.
+
+
+# Trabalho 3 — Análise Léxica (Scanner)
+
+## Escopo léxico do subconjunto Python
+
+A terceira etapa implementa um scanner didático próprio em `backend/scanner.py`. Ele percorre o código caractere a caractere, cria tokens com tipo, lexema, linha e coluna, ignora espaços e comentários e acumula erros sem interromper a análise.
+
+| Categoria | Suporte e exemplos |
+|---|---|
+| Palavras reservadas | `and`, `else`, `False`, `if`, `in`, `is`, `None`, `not`, `or`, `print`, `return`, `True`, `while` |
+| Identificadores | Letra ou `_` seguida de letras, dígitos ou `_`; exemplos: `nome`, `resultado`, `_valor1` |
+| Literais inteiros | Uma ou mais casas decimais; exemplos: `0`, `10`, `42` |
+| Literais reais | Parte inteira, ponto e parte decimal; exemplos: `3.14`, `8.5` |
+| Literais de texto | Delimitados por aspas simples ou duplas, com escapes; exemplos: `'oi'`, `"Olá\\n"` |
+| Operadores | `+`, `-`, `*`, `/`, `//`, `%`, `**`, `=`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `+=`, `-=`, `*=`, `/=`, `%=`, `//=`, `**=` |
+| Delimitadores | `(`, `)`, `[`, `]`, `{`, `}`, `.`, `,`, `:`, `;` |
+| Comentários | Comentários de linha iniciados por `#`; são ignorados |
+| Espaços em branco | Espaços, tabulações, retornos de carro e quebras de linha são ignorados; a quebra atualiza linha e coluna |
+| Caracteres não reconhecidos | Geram `ERRO_LEXICO` com lexema, linha, coluna e mensagem didática; a análise continua |
+
+A linguagem escolhida continua sendo Python, mas o scanner cobre apenas o subconjunto documentado acima. Indentação ainda não é tokenizada, e a análise sintática e semântica serão desenvolvidas nas Etapas 4 e 5.
+
+## Implementação do scanner
+
+O scanner foi implementado em Python, usando uma classe `Scanner` com cursor, linha e coluna atuais. A identificação usa a estratégia de maior correspondência para operadores compostos: por exemplo, `==` é reconhecido antes de dois operadores `=`. Strings não fechadas e números no formato incompleto `12.` geram erros localizados. Um erro não encerra o processamento; tokens válidos posteriores continuam sendo retornados.
+
+A escolha de um scanner próprio, em vez de delegar a tokenização ao módulo `tokenize` da biblioteca padrão, mantém cada decisão visível para fins educacionais e permite mostrar mensagens consistentes com o subconjunto definido. A interface web exibe a sequência resultante, as contagens por categoria e as mensagens de erro.
+
+## Contrato atualizado da API
+
+A rota `POST /api/analyze` recebe:
+
+```json
+{
+  "codigo": "numero = 10\nprint(numero)"
+}
+```
+
+Em uma análise sem erros, retorna HTTP 200:
+
+```json
+{
+  "success": true,
+  "sucesso": true,
+  "message": "Análise léxica concluída: todos os lexemas foram reconhecidos.",
+  "recebido": true,
+  "estatisticas": {"caracteres": 25, "linhas": 2},
+  "tokens": [
+    {"tipo": "IDENTIFICADOR", "lexema": "numero", "linha": 1, "coluna": 1},
+    {"tipo": "OPERADOR", "lexema": "=", "linha": 1, "coluna": 8},
+    {"tipo": "LITERAL_INTEIRO", "lexema": "10", "linha": 1, "coluna": 10}
+  ],
+  "erros": []
+}
+```
+
+Quando há erro léxico, a análise também termina com HTTP 200, pois o processamento foi concluído, mas `success` e `sucesso` assumem `false`:
+
+```json
+{
+  "success": false,
+  "sucesso": false,
+  "tokens": [],
+  "erros": [
+    {
+      "tipo": "ERRO_LEXICO",
+      "lexema": "@",
+      "linha": 1,
+      "coluna": 9,
+      "mensagem": "Erro léxico na linha 1, coluna 9: Caractere não reconhecido '@'. Verifique se o trecho faz parte do subconjunto suportado."
+    }
+  ]
+}
+```
+
+O contrato anterior foi preservado para não quebrar a interface existente: `success`, `message`, `recebido` e `estatisticas` continuam presentes. Entrada vazia permanece rejeitada com HTTP 422, e requisições malformadas continuam recebendo HTTP 400.
+
+## Como executar e testar
+
+Com dependências locais:
+
+```bash
+python3 -m unittest discover -s backend -p "test_*.py" -v
+node --test frontend/test_app_core.js
+python3 -m unittest discover -s frontend -p "test_*.py" -v
+python3 -m py_compile backend/app.py backend/scanner.py backend/test_app.py backend/test_scanner.py
+```
+
+Com Docker Compose:
+
+```bash
+docker compose up --build -d
+docker compose ps
+curl http://localhost:8080/api/health
+curl -X POST http://localhost:8080/api/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"codigo":"numero = 10"}'
+docker compose down
+```
+
+## Limitações conhecidas e próximos passos
+
+Esta etapa ainda não constrói árvore sintática, não verifica indentação, não valida a gramática, não monta tabela de símbolos e não avalia tipos. Esses comportamentos pertencem às etapas seguintes. O scanner também não cobre toda a especificação Python, incluindo números científicos, strings multilinha, f-strings, decorators, operadores de bit e indentação significativa.
+
+O diferencial didático desta versão é mostrar o percurso mínimo entre código, token, lexema e posição, além de continuar a análise depois de encontrar um erro. Na Etapa 4, o parser poderá consumir diretamente a lista de tokens retornada por este contrato.

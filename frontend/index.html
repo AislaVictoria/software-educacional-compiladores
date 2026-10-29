@@ -13,20 +13,21 @@
       <p class="eyebrow">Software educacional</p>
       <h1>Laboratório de Linguagens</h1>
     </div>
-    <span class="language-badge">Python · etapa 2</span>
+    <span class="language-badge">Python · scanner</span>
   </header>
 
   <main class="layout">
     <section class="intro-panel">
       <p class="eyebrow accent">Sua primeira experiência com o analisador</p>
       <h2>Escreva, experimente e prepare seu código.</h2>
-      <p>Insira um pequeno programa em Python ou comece por um dos exemplos. Nesta etapa, o sistema confirma o recebimento do código e prepara o caminho para as análises léxica, sintática e semântica.</p>
+      <p>Insira um pequeno programa em Python ou comece por um dos exemplos. O scanner percorre o código, reconhece tokens e mostra onde cada lexema aparece.</p>
       <div class="scope-card">
         <strong>O que já faz parte desta versão?</strong>
         <ul>
           <li>Variáveis e tipos básicos</li>
           <li>Operadores aritméticos</li>
-          <li>Estruturas condicionais</li>
+          <li>Tokens, lexemas e posições</li>
+          <li>Erros léxicos com mensagens claras</li>
         </ul>
       </div>
     </section>
@@ -62,6 +63,27 @@ print(nome)</textarea>
           <p>Digite ou selecione um código e clique em “Solicitar análise”.</p>
         </div>
       </div>
+      <section id="token-panel" class="token-panel" hidden aria-label="Resultado da análise léxica">
+        <div class="token-heading">
+          <div>
+            <p class="eyebrow">Mapa do scanner</p>
+            <h3>Tokens encontrados</h3>
+          </div>
+          <span id="token-count" class="count-badge">0 tokens</span>
+        </div>
+        <p class="learning-note"><strong>Token</strong> é a unidade reconhecida pelo scanner. <strong>Lexema</strong> é o texto exato que apareceu no programa.</p>
+        <div id="token-summary" class="token-summary" aria-label="Contagem por categoria"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tipo</th><th>Lexema</th><th>Linha</th><th>Coluna</th></tr></thead>
+            <tbody id="token-table-body"></tbody>
+          </table>
+        </div>
+        <div id="lexical-errors" class="lexical-errors" hidden>
+          <h3>O que precisa de atenção?</h3>
+          <ul id="error-list"></ul>
+        </div>
+      </section>
     </section>
   </main>
 

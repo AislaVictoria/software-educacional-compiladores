@@ -47,6 +47,27 @@ class BackendApiTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()['estatisticas']['caracteres'], len(codigo))
 
+    def test_analyze_retorna_tokens_com_posicao(self):
+        response = self.client.post('/api/analyze', json={'codigo': 'numero = 10'})
+        body = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(body['success'])
+        self.assertTrue(body['sucesso'])
+        self.assertEqual([token['lexema'] for token in body['tokens']], ['numero', '=', '10'])
+        self.assertEqual(body['tokens'][0]['tipo'], 'IDENTIFICADOR')
+        self.assertEqual((body['tokens'][2]['linha'], body['tokens'][2]['coluna']), (1, 10))
+        self.assertEqual(body['erros'], [])
+
+    def test_analyze_retorna_erros_lexicos_sem_quebrar_resposta(self):
+        response = self.client.post('/api/analyze', json={'codigo': 'valor = @'})
+        body = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(body['success'])
+        self.assertFalse(body['sucesso'])
+        self.assertEqual([token['lexema'] for token in body['tokens']], ['valor', '='])
+        self.assertEqual(len(body['erros']), 1)
+        self.assertIn('linha 1, coluna 9', body['erros'][0]['mensagem'])
+
 
 if __name__ == '__main__':
     unittest.main()

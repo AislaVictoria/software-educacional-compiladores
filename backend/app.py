@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 
+from scanner import tokenize
+
 app = Flask(__name__)
 
 
@@ -18,7 +20,7 @@ def health():
 
 @app.post("/api/analyze")
 def analyze():
-    """Recebe o código e confirma que ele está pronto para as próximas análises."""
+    """Tokeniza o código e retorna tokens e erros léxicos didáticos."""
     if not request.is_json:
         return jsonify({
             "success": False,
@@ -45,14 +47,25 @@ def analyze():
             "message": "Informe um código-fonte antes de solicitar a análise."
         }), 422
 
+    tokens, erros = tokenize(codigo)
+    sucesso = not erros
     return jsonify({
-        "success": True,
-        "message": "Código recebido com sucesso. A análise será implementada nas próximas etapas.",
+        # "success" preserva o contrato da etapa anterior; "sucesso" é o
+        # nome em português usado na documentação desta etapa.
+        "success": sucesso,
+        "sucesso": sucesso,
+        "message": (
+            "Análise léxica concluída: todos os lexemas foram reconhecidos."
+            if sucesso else
+            f"Análise léxica concluída com {len(erros)} erro(s). Confira as mensagens abaixo."
+        ),
         "recebido": True,
         "estatisticas": {
             "caracteres": len(codigo),
             "linhas": len(codigo.splitlines())
-        }
+        },
+        "tokens": tokens,
+        "erros": erros,
     }), 200
 
 
