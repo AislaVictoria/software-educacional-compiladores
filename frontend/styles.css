@@ -60,3 +60,155 @@ tbody tr:last-child td { border-bottom: 0; }
 .lexical-errors { margin-top: 16px; padding: 14px; border-left: 3px solid #d88927; border-radius: 0 10px 10px 0; background: #fff9ed; }
 .lexical-errors ul { margin: 9px 0 0; padding-left: 20px; color: #77501a; font-size: .8rem; line-height: 1.55; }
 @media (max-width: 800px) { .token-heading { align-items: flex-start; flex-direction: column; } }
+.ast-panel { padding: 20px; border-top: 1px solid var(--line); background: #fbfcff; }
+.secondary-button { padding: 7px 10px; color: #3e59ba; background: #f0f3ff; font-size: .75rem; }
+.ast-tree, .ast-tree ul { margin: 12px 0 0; padding-left: 20px; list-style: none; }
+.ast-tree > ul { padding-left: 0; }
+.ast-tree li { position: relative; margin: 6px 0; }
+.ast-node { width: auto; padding: 7px 10px; border: 1px solid #cbd5ff; border-radius: 8px; color: #25365f; background: white; font: 700 .76rem/1.2 inherit; text-align: left; }
+.ast-node:hover { background: #eef2ff; transform: none; }
+.syntax-errors { padding: 18px 20px; border-top: 1px solid #f0d5d5; background: #fff1f1; color: #752d2d; }
+.syntax-errors h3 { margin: 0; font-size: 1rem; }.syntax-errors p, .syntax-errors li { font-size: .82rem; line-height: 1.5; }.syntax-errors ul { margin-bottom: 0; }
+
+/* Etapa 4 - Analise sintatica e visualizacao da AST */
+
+.layout {
+  align-items: start;
+}
+
+.workspace {
+  min-width: 0;
+}
+
+.analysis-steps {
+  padding-left: 20px;
+  margin: 12px 0;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.8;
+}
+
+.scope-note {
+  margin: 12px 0 0;
+  font-size: .78rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.ast-help {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #3e59ba;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.ast-tree {
+  max-height: 600px;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.ast-tree ul {
+  margin: 8px 0 8px 10px;
+  padding-left: 18px;
+  border-left: 1px solid #cbd5e1;
+}
+
+.ast-tree > ul {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.ast-tree li {
+  margin: 8px 0;
+}
+
+.ast-node {
+  max-width: 100%;
+  padding: 9px 12px;
+  font-family: Consolas, monospace;
+  font-size: .76rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  border: 1px solid #cbd5ff;
+  border-radius: 7px;
+  color: #25365f;
+  background: #f8faff;
+}
+
+.ast-node[aria-expanded="true"]::before {
+  content: "− ";
+  color: #4568d8;
+}
+
+.ast-node[aria-expanded="false"]::before {
+  content: "+ ";
+  color: #4568d8;
+}
+
+.ast-node[aria-expanded]:hover {
+  background: #e8edff;
+  border-color: #8296e9;
+}
+
+.ast-node:disabled {
+  opacity: 1;
+  cursor: default;
+  color: #21634a;
+  background: #effaf4;
+  border-color: #bce5cc;
+  transform: none;
+}
+
+.ast-rule {
+  display: block;
+  margin: 5px 0 8px 8px;
+  color: #66738a;
+  font-family: Consolas, monospace;
+  font-size: .72rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.secondary-button:hover {
+  color: #25365f;
+  background: #dfe6ff;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid #4568d8;
+  outline-offset: 3px;
+}
+
+textarea:focus-visible {
+  outline: 2px solid #8296e9;
+  outline-offset: -2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 800px) {
+  .ast-tree {
+    max-height: 450px;
+    padding: 10px;
+  }
+
+  .ast-tree ul {
+    padding-left: 12px;
+  }
+
+  .editor-footer {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

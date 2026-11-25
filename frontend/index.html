@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -13,24 +13,50 @@
       <p class="eyebrow">Software educacional</p>
       <h1>Laboratório de Linguagens</h1>
     </div>
-    <span class="language-badge">Python · scanner</span>
-  </header>
+<span class="language-badge">Python · Scanner e Parser</span>  </header>
 
   <main class="layout">
+    
     <section class="intro-panel">
-      <p class="eyebrow accent">Sua primeira experiência com o analisador</p>
-      <h2>Escreva, experimente e prepare seu código.</h2>
-      <p>Insira um pequeno programa em Python ou comece por um dos exemplos. O scanner percorre o código, reconhece tokens e mostra onde cada lexema aparece.</p>
+      <p class="eyebrow accent">Análise léxica e sintática</p>
+
+      <h2>Entenda como um compilador interpreta seu código.</h2>
+
+      <p>
+        Escreva um pequeno programa em Python ou utilize
+        um dos exemplos disponíveis. Acompanhe o reconhecimento
+        dos tokens pelo scanner e a organização das estruturas
+        pelo analisador sintático.
+      </p>
+
       <div class="scope-card">
-        <strong>O que já faz parte desta versão?</strong>
+        <strong>O que faz parte desta versão?</strong>
         <ul>
           <li>Variáveis e tipos básicos</li>
-          <li>Operadores aritméticos</li>
+          <li>Operadores aritméticos, relacionais e lógicos</li>
+          <li>Estruturas condicionais if e else</li>
           <li>Tokens, lexemas e posições</li>
-          <li>Erros léxicos com mensagens claras</li>
+          <li>Árvore Sintática Abstrata (AST)</li>
+          <li>Precedência e associatividade de operadores</li>
+          <li>Identificação de erros léxicos e sintáticos</li>
         </ul>
       </div>
+
+      <div class="scope-card">
+        <strong>Como funciona a análise?</strong>
+        <ol class="analysis-steps">
+          <li>O scanner reconhece os tokens.</li>
+          <li>O parser verifica a estrutura gramatical.</li>
+          <li>A AST representa a organização do código.</li>
+        </ol>
+        <p class="scope-note">
+          Esta versão trabalha com um subconjunto educacional
+          de Python. Nem todas as construções da linguagem
+          são suportadas.
+        </p>
+      </div>
     </section>
+
 
     <section class="workspace" aria-labelledby="editor-title">
       <div class="workspace-heading">
@@ -45,6 +71,8 @@
             <option value="variaveis">Variáveis e tipos básicos</option>
             <option value="operadores">Operações aritméticas</option>
             <option value="condicional">Estrutura condicional</option>
+            <option value="erro_lexico">Exemplo com erro léxico</option>
+            <option value="erro_sintatico">Exemplo com erro sintático</option>
           </select>
         </label>
       </div>
@@ -84,6 +112,23 @@ print(nome)</textarea>
           <ul id="error-list"></ul>
         </div>
       </section>
+      <section id="ast-panel" class="ast-panel" hidden aria-label="Árvore Sintática Abstrata">
+        <div class="token-heading">
+          <div><p class="eyebrow">Estrutura reconhecida</p><h3>Árvore Sintática Abstrata (AST)</h3></div>
+          <button id="ast-toggle" class="secondary-button" type="button" aria-expanded="true" aria-controls="ast-tree">Recolher árvore</button>
+        </div>
+        <p class="learning-note">A AST simplifica a derivação: mantém as construções importantes e mostra como os nós se relacionam. A posição de cada nó indica o trecho de origem no código.</p>
+<p class="ast-help">
+  Clique nos nós com filhos para expandir ou recolher
+  suas estruturas. L indica a linha e C indica a coluna.
+</p>
+
+<div id="ast-tree" class="ast-tree"></div>      </section>
+      <section id="syntax-errors" class="syntax-errors" hidden aria-label="Erros sintáticos">
+        <h3>Erros sintáticos</h3>
+        <p>Os tokens foram reconhecidos, mas a organização não corresponde à gramática do subconjunto.</p>
+        <ul id="syntax-error-list"></ul>
+      </section>
     </section>
   </main>
 
@@ -92,3 +137,4 @@ print(nome)</textarea>
   <script src="app.js"></script>
 </body>
 </html>
+

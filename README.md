@@ -1,4 +1,4 @@
-# Laboratório de Linguagens
+﻿# Laboratório de Linguagens
 
 ## Trabalho 1 — Primeira etapa do projeto
 
@@ -280,3 +280,355 @@ docker compose down
 Esta etapa ainda não constrói árvore sintática, não verifica indentação, não valida a gramática, não monta tabela de símbolos e não avalia tipos. Esses comportamentos pertencem às etapas seguintes. O scanner também não cobre toda a especificação Python, incluindo números científicos, strings multilinha, f-strings, decorators, operadores de bit e indentação significativa.
 
 O diferencial didático desta versão é mostrar o percurso mínimo entre código, token, lexema e posição, além de continuar a análise depois de encontrar um erro. Na Etapa 4, o parser poderá consumir diretamente a lista de tokens retornada por este contrato.
+
+# Trabalho 4 — Análise Sintática e AST
+
+## 1. Objetivo
+
+Nesta etapa, o Laboratório de Linguagens passou a realizar
+a análise sintática de um subconjunto da linguagem Python,
+utilizando os tokens produzidos pelo scanner da Etapa 3.
+
+O objetivo é permitir que o estudante compreenda como
+um compilador reconhece os elementos de um programa,
+verifica sua organização gramatical e representa sua
+estrutura por meio de uma Árvore Sintática Abstrata (AST).
+
+## 2. Funcionalidades implementadas
+
+- Análise léxica com reconhecimento de tokens e lexemas;
+- Análise sintática descendente recursiva;
+- Gramática formal documentada em EBNF;
+- Construção e serialização da AST;
+- Precedência e associatividade de operadores;
+- Atribuições e expressões;
+- Literais inteiros, reais, textuais, booleanos e nulos;
+- Chamadas de print com zero ou mais argumentos;
+- Estruturas condicionais if e else;
+- Condicionais aninhados;
+- Verificação da indentação;
+- Diagnósticos léxicos e sintáticos separados;
+- Posições iniciais e finais dos nós da AST;
+- Árvore hierárquica com controles de expansão;
+- Apresentação de regras gramaticais;
+- Limites de entrada e complexidade;
+- Testes automatizados e de integração.
+
+## 3. Arquitetura
+
+O projeto mantém a separação entre frontend e backend.
+
+O frontend utiliza HTML, CSS e JavaScript, sendo
+disponibilizado pelo servidor Nginx.
+
+O backend utiliza Python e Flask e contém os módulos
+responsáveis pela análise léxica e sintática.
+
+Os serviços são executados com Docker Compose.
+
+```mermaid
+flowchart LR
+    A[Navegador] --> B[Frontend Nginx]
+    B --> C[API Flask]
+    C --> D[Scanner]
+    D --> E[Parser]
+    E --> F[AST]
+```
+
+O parser somente é executado quando não existem
+erros léxicos.
+
+## 4. Organização dos principais arquivos
+
+```text
+software-educacional-compiladores/
+  backend/
+    app.py
+    scanner.py
+    parser.py
+    syntax_ast.py
+    requirements.txt
+    Dockerfile
+    test_app.py
+    test_scanner.py
+    test_parser.py
+    test_robustez.py
+  frontend/
+    index.html
+    styles.css
+    app.js
+    app-core.js
+    nginx.conf
+    Dockerfile
+    test_app_core.js
+    test_interface.py
+  docs/
+    gramatica.md
+    fluxograma.md
+  evidencias/
+    etapa-4/
+  docker-compose.yml
+  docs-testes-trabalho-4.md
+  ENTREGA.md
+  README.md
+```
+
+A estrutura acima apresenta os principais arquivos,
+sem listar todos os arquivos de testes e documentos
+das etapas anteriores.
+
+## 5. Gramática e estratégia do parser
+
+O analisador sintático foi implementado manualmente
+utilizando análise descendente recursiva e escalonamento
+de precedência para as expressões.
+
+O símbolo inicial da gramática é programa.
+
+A indentação é identificada pelas posições dos tokens,
+sem a emissão de tokens específicos INDENT e DEDENT.
+
+A documentação completa está disponível em:
+
+- [Gramática formal](docs/gramatica.md)
+- [Fluxograma do software](docs/fluxograma.md)
+
+## 6. Precedência dos operadores
+
+| Prioridade | Operadores |
+|---|---|
+| Maior | ** |
+| 5 | *, /, //, % |
+| 4 | +, - |
+| 3 | ==, !=, <, >, <=, >= |
+| 2 | and |
+| Menor | or |
+
+A potência é associativa à direita. Os operadores
+aritméticos restantes e os operadores lógicos são
+associativos à esquerda.
+
+Comparações encadeadas não são suportadas.
+
+## 7. Árvore Sintática Abstrata
+
+Cada nó da AST contém:
+
+- tipo;
+- linha;
+- coluna;
+- atributos;
+- filhos;
+- linhaFinal, quando disponível;
+- colunaFinal, quando disponível.
+
+Exemplo de entrada:
+
+```python
+resultado = 10 + 5 * 2
+print(resultado)
+```
+
+Representação simplificada:
+
+```text
+PROGRAMA
+  ATRIBUICAO: resultado
+    OPERACAO_BINARIA: +
+      LITERAL_INTEIRO: 10
+      OPERACAO_BINARIA: *
+        LITERAL_INTEIRO: 5
+        LITERAL_INTEIRO: 2
+  CHAMADA_FUNCAO: print
+    IDENTIFICADOR: resultado
+```
+
+A estrutura demonstra que a multiplicação possui
+precedência superior à adição.
+
+A AST representa a organização do programa, mas
+não executa nem calcula o resultado das expressões.
+
+## 8. Interface educacional
+
+A interface disponibiliza cinco exemplos editáveis:
+
+1. Variáveis e tipos básicos;
+2. Operações aritméticas;
+3. Estrutura condicional;
+4. Exemplo com erro léxico;
+5. Exemplo com erro sintático.
+
+Após solicitar uma análise, o estudante pode
+visualizar os tokens, seus tipos, lexemas e posições.
+
+Quando o código é sintaticamente válido, a AST
+é apresentada de maneira hierárquica, com posições
+dos nós e regras gramaticais das operações.
+
+A interface diferencia visualmente três resultados:
+
+- Verde: análise léxica e sintática bem-sucedida;
+- Amarelo: ocorrência de erro léxico;
+- Vermelho: ocorrência de erro sintático.
+
+## 9. Contrato da API
+
+Rotas disponíveis:
+
+| Método | Rota | Finalidade |
+|---|---|---|
+| GET | /api/hello | Verificação inicial da API |
+| GET | /api/health | Verificação de saúde |
+| POST | /api/analyze | Análise do código-fonte |
+
+Exemplo de requisição:
+
+```json
+{
+  "codigo": "resultado = 10 + 5 * 2"
+}
+```
+
+A resposta preserva os campos das etapas anteriores
+e acrescenta informações da análise sintática.
+
+Principais campos:
+
+| Campo | Finalidade |
+|---|---|
+| success e sucesso | Resultado geral da análise |
+| message | Mensagem explicativa |
+| recebido | Indicação de recebimento |
+| estatisticas | Quantidade de caracteres e linhas |
+| tokens | Tokens reconhecidos |
+| erros | Erros léxicos |
+| lexico | Resultado da análise léxica |
+| sintatico | Resultado da análise sintática |
+| ast | Árvore Sintática Abstrata |
+| erros_sintaticos | Diagnósticos sintáticos |
+
+Quando existem erros léxicos, o parser não é executado.
+
+Quando existem erros sintáticos, a AST final é nula.
+
+Erros encontrados durante a análise são retornados
+com HTTP 200, pois a requisição foi processada.
+
+Entradas malformadas, vazias ou acima dos limites
+recebem os códigos HTTP apropriados, incluindo
+400, 422 e 413.
+
+## 10. Como executar a versão atual
+
+Pré-requisitos:
+
+- Docker;
+- Docker Compose;
+- Git, para clonar o repositório.
+
+Na raiz do projeto, execute:
+
+```bash
+docker compose up --build -d
+```
+
+Verifique os serviços:
+
+```bash
+docker compose ps
+```
+
+Acesse no navegador:
+
+http://localhost:8080
+
+Para encerrar:
+
+```bash
+docker compose down
+```
+
+Não é necessário instalar Flask ou Nginx diretamente
+na máquina para executar a aplicação com Docker.
+
+## 11. Como executar os testes automatizados
+
+Para executar os testes localmente, são necessários
+Python, Node.js e as dependências do backend.
+
+```powershell
+python -m pip install -r backend\requirements.txt
+
+python -m unittest discover -s backend -p "test*.py" -v
+
+node --test frontend\test_app_core.js
+
+python frontend\test_interface.py -v
+```
+
+## 12. Resultados da validação
+
+| Categoria | Testes aprovados |
+|---|---:|
+| Backend, scanner, parser, gramática e robustez | 71 |
+| Lógica JavaScript | 10 |
+| Contrato estático da interface | 12 |
+| Total automatizado | 93 |
+| Integração HTTP | 5 |
+
+A execução no Docker e a comunicação entre frontend
+e backend também foram verificadas.
+
+As evidências visuais demonstram a análise aritmética,
+a estrutura condicional, a AST e a apresentação de
+erros léxicos e sintáticos.
+
+Documentação complementar:
+
+- [Registro detalhado dos testes](docs-testes-trabalho-4.md)
+- [Evidências da Etapa 4](evidencias/etapa-4/)
+- [Documento de entrega](ENTREGA.md)
+
+## 13. Limites de processamento
+
+| Recurso | Limite |
+|---|---:|
+| Caracteres do código | 10000 |
+| Corpo da requisição HTTP | 128 KiB |
+| Tokens | 2000 |
+| Profundidade de parênteses | 100 |
+| Profundidade da AST | 100 níveis |
+
+Os limites foram definidos para reduzir problemas
+de processamento excessivo e preservar a utilização
+educacional da aplicação.
+
+## 14. Limitações e próximas etapas
+
+O software não implementa toda a linguagem Python.
+
+Ainda não são suportados:
+
+- Declaração de funções e return;
+- Laços for e while;
+- Operadores unários;
+- Comparações encadeadas;
+- Expressões em múltiplas linhas;
+- Listas e dicionários;
+- Classes e importações;
+- Análise semântica;
+- Verificação de tipos;
+- Tabela de símbolos;
+- Execução do código-fonte.
+
+A integração opcional com Ollama não foi implementada.
+O funcionamento do analisador não depende de serviços
+externos de inteligência artificial.
+
+A próxima etapa será dedicada à análise semântica,
+utilizando a AST produzida nesta versão.
+
+Os testes realizados verificam o funcionamento técnico
+do software. Ainda não foi realizada uma avaliação
+formal de aprendizagem com estudantes.

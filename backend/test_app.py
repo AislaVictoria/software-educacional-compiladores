@@ -68,6 +68,24 @@ class BackendApiTestCase(unittest.TestCase):
         self.assertEqual(len(body['erros']), 1)
         self.assertIn('linha 1, coluna 9', body['erros'][0]['mensagem'])
 
+    def test_analyze_retorna_ast_para_codigo_valido(self):
+        response = self.client.post('/api/analyze', json={'codigo': 'resultado = 10 + 5 * 2'})
+        body = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(body['sintatico']['sucesso'])
+        self.assertEqual(body['ast']['tipo'], 'PROGRAMA')
+        self.assertEqual(body['ast']['filhos'][0]['tipo'], 'ATRIBUICAO')
+        self.assertEqual(body['ast']['filhos'][0]['filhos'][0]['filhos'][1]['atributos']['operador'], '*')
+
+    def test_analyze_retorna_erro_sintatico_sem_ast(self):
+        response = self.client.post('/api/analyze', json={'codigo': 'resultado = 10 +'})
+        body = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(body['sintatico']['sucesso'])
+        self.assertIsNone(body['ast'])
+        self.assertTrue(body['erros_sintaticos'])
+        self.assertEqual(body['erros'], [])
+
 
 if __name__ == '__main__':
     unittest.main()

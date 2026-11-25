@@ -54,8 +54,25 @@ class Scanner:
     def scan(self) -> tuple[list[Token], list[LexicalError]]:
         while not self.at_end:
             character = self.current
-            if character in " \t\r":
+            
+            if character == "\t":
+                inicio_linha = self.source.rfind(
+                    "\n", 0, self.index
+                ) + 1
+
+                prefixo = self.source[inicio_linha:self.index]
+
+                if not prefixo.strip():
+                    self.add_error(
+                        "\\t",
+                        "Tabulação na indentação não suportada. Utilize espaços"
+                    )
+
                 self.advance()
+
+            elif character in " \r":
+                self.advance()
+
             elif character == "\n":
                 self.advance_line()
             elif character == "#":
@@ -143,30 +160,54 @@ class Scanner:
                 return
         self.add_token(token_type, self.source[start:self.index], start_line, start_column)
 
+    
     def scan_string(self) -> None:
         start_line, start_column = self.line, self.column
         quote = self.current
         start = self.index
         self.advance()
         escaped = False
+
         while not self.at_end:
             character = self.current
-            if character == "\n" and not escaped:
+
+            if character == "\n":
                 lexeme = self.source[start:self.index]
-                self.add_error(lexeme, "Literal de texto não fechado", start_line, start_column)
+                self.add_error(
+                    lexeme,
+                    "Literal de texto não fechado",
+                    start_line,
+                    start_column
+                )
                 self.advance_line()
                 return
+
             if character == quote and not escaped:
                 self.advance()
-                self.add_token("LITERAL_TEXTO", self.source[start:self.index], start_line, start_column)
+                self.add_token(
+                    "LITERAL_TEXTO",
+                    self.source[start:self.index],
+                    start_line,
+                    start_column
+                )
                 return
+
             if character == "\\" and not escaped:
                 escaped = True
             else:
                 escaped = False
+
             self.advance()
+
         lexeme = self.source[start:self.index]
-        self.add_error(lexeme, "Literal de texto não fechado", start_line, start_column)
+        self.add_error(
+            lexeme,
+            "Literal de texto não fechado",
+            start_line,
+            start_column
+        )
+
+
 
     def scan_operator(self) -> bool:
         for operator in OPERATORS:

@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
 
 from scanner import tokenize
+from parser import parse_tokens
 
 app = Flask(__name__)
+
+LIMITE_CARACTERES = 10000
+app.config["MAX_CONTENT_LENGTH"] = 128 * 1024
 
 
 @app.get("/api/hello")
@@ -47,17 +51,34 @@ def analyze():
             "message": "Informe um código-fonte antes de solicitar a análise."
         }), 422
 
+    if len(codigo) > LIMITE_CARACTERES:
+        return jsonify({
+            "success": False,
+            "message": (
+                f"O código excede o limite de "
+                f"{LIMITE_CARACTERES} caracteres."
+            )
+        }), 413
+
+	
     tokens, erros = tokenize(codigo)
+    ast = None
+    erros_sintaticos = []
+    if not erros:
+        ast, erros_sintaticos = parse_tokens(tokens)
     sucesso = not erros
+    sucesso_geral = sucesso and not erros_sintaticos
     return jsonify({
         # "success" preserva o contrato da etapa anterior; "sucesso" é o
         # nome em português usado na documentação desta etapa.
-        "success": sucesso,
-        "sucesso": sucesso,
+        "success": sucesso_geral,
+        "sucesso": sucesso_geral,
         "message": (
-            "Análise léxica concluída: todos os lexemas foram reconhecidos."
-            if sucesso else
+            "Análise léxica e sintática concluídas com sucesso."
+            if sucesso and not erros_sintaticos else
             f"Análise léxica concluída com {len(erros)} erro(s). Confira as mensagens abaixo."
+            if erros else
+            f"Análise sintática concluída com {len(erros_sintaticos)} erro(s). Confira as mensagens abaixo."
         ),
         "recebido": True,
         "estatisticas": {
@@ -66,8 +87,19 @@ def analyze():
         },
         "tokens": tokens,
         "erros": erros,
+        "lexico": {"sucesso": not erros, "tokens": tokens, "erros": erros},
+        "sintatico": {"sucesso": not erros and not erros_sintaticos, "ast": ast, "erros": erros_sintaticos},
+        "ast": ast,
+        "erros_sintaticos": erros_sintaticos,
     }), 200
 
+
+@app.errorhandler(413)
+def request_too_large(_error):
+    return jsonify({
+        "success": False,
+        "message": "A requisição excede o tamanho permitido."
+    }), 413
 
 @app.errorhandler(500)
 def internal_error(_error):
