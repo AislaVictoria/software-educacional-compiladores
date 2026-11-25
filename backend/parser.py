@@ -31,7 +31,7 @@ class Parser:
         filhos: list[ASTNode] = []
         while self.atual is not None:
             inicio = self.index
-            
+
             try:
                 if self.atual["coluna"] != 1:
                     token = self.atual
@@ -57,7 +57,7 @@ class Parser:
         ultimo = self.tokens[-1]
         return (None if self.erros else node("PROGRAMA", primeiro, filhos=filhos, ultimo=ultimo)), self.erros
 
-    
+
     def declaracao_ou_comando(self) -> ASTNode:
         inicio = self.atual
 
@@ -99,7 +99,7 @@ class Parser:
         valor = self.expressao()
         return node("ATRIBUICAO", nome, {"nome": nome["lexema"]}, [valor], self.tokens[self.index - 1])
 
-    
+
     def chamada_print(self) -> ASTNode:
         inicio = self.consumir(
             "PALAVRA_RESERVADA", "'print'"
@@ -127,7 +127,7 @@ class Parser:
         )
 
 
-   
+
     def retorno(self) -> ASTNode:
         token = self.atual
 
@@ -141,7 +141,7 @@ class Parser:
         )
 
 
-    
+
     def condicional(self) -> ASTNode:
         inicio = self.consumir("PALAVRA_RESERVADA", "'if'")
         condicao = self.expressao()
@@ -221,7 +221,7 @@ class Parser:
             ultimo=self.tokens[self.index - 1]
         )
 
-    
+
     def expressao(self, minimo: int = 0) -> ASTNode:
         inicio = self.atual
         esquerda = self.primaria()
@@ -281,7 +281,7 @@ class Parser:
         return esquerda
 
 
-    
+
     def primaria(self) -> ASTNode:
         token = self.atual
 
@@ -395,7 +395,7 @@ class Parser:
         while self.atual is not None and self.atual["linha"] == self.tokens[max(0, self.index - 1)]["linha"]:
             self.avancar()
 
-   
+
     def consumir(self, tipo: str, esperado: str) -> dict[str, Any]:
         if self.atual is not None and self.atual["tipo"] == tipo:
             return self.avancar()
@@ -411,7 +411,7 @@ class Parser:
         )
 
 
-    
+
     def consumir_lexema(self, lexema: str, esperado: str) -> dict[str, Any]:
         if self.eh_lexema(lexema):
             token = self.atual
@@ -450,7 +450,7 @@ class Parser:
     def peek_lexema(self) -> str | None:
         return self.tokens[self.index + 1]["lexema"] if self.index + 1 < len(self.tokens) else None
 
-    
+
     def avancar(self) -> dict[str, Any]:
         token = self.atual
         self.index += 1
@@ -462,7 +462,7 @@ class Parser:
             return {"lexema": "fim do código", "linha": 1, "coluna": 1}
         ultimo = self.tokens[-1]
         return {"lexema": "fim do código", "linha": ultimo["linha"], "coluna": ultimo["coluna"] + len(ultimo["lexema"])}
-    
+
     @staticmethod
     def regra_operador(operador: str) -> str:
         if operador == "**":

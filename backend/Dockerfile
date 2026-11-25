@@ -13,4 +13,3 @@ COPY app.py scanner.py parser.py syntax_ast.py .
 
 EXPOSE 5000
 CMD ["python", "app.py"]
-

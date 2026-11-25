@@ -60,7 +60,7 @@ def analyze():
             )
         }), 413
 
-	
+
     tokens, erros = tokenize(codigo)
     ast = None
     erros_sintaticos = []

@@ -54,7 +54,7 @@ class Scanner:
     def scan(self) -> tuple[list[Token], list[LexicalError]]:
         while not self.at_end:
             character = self.current
-            
+
             if character == "\t":
                 inicio_linha = self.source.rfind(
                     "\n", 0, self.index
@@ -160,7 +160,7 @@ class Scanner:
                 return
         self.add_token(token_type, self.source[start:self.index], start_line, start_column)
 
-    
+
     def scan_string(self) -> None:
         start_line, start_column = self.line, self.column
         quote = self.current

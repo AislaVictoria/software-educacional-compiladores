@@ -198,7 +198,7 @@ async function solicitarAnalise() {
       return;
     }
 
-    
+
     const { caracteres, linhas } = dados.estatisticas;
 
     const temErrosLexicos = dados.erros.length > 0;
